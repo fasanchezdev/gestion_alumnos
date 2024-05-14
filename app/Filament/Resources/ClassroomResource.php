@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CursoResource\Pages;
-use App\Filament\Resources\CursoResource\RelationManagers;
-use App\Models\Curso;
+use App\Filament\Resources\ClassroomResource\Pages;
+use App\Filament\Resources\ClassroomResource\RelationManagers;
+use App\Models\Classroom;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CursoResource extends Resource
+class ClassroomResource extends Resource
 {
-    protected static ?string $model = Curso::class;
+    protected static ?string $model = Classroom::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,15 +23,18 @@ class CursoResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                Forms\Components\TextInput::make('curso_id')
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\Select::make('divition_id')
-                    ->relationship('divition','name')
+                    ->numeric(),
+                Forms\Components\TextInput::make('divition_id')
                     ->required()
-                    ->searchable()
-                    ->preload()
-                    ->placeholder('Seleccione una division'),
+                    ->numeric(),
+                Forms\Components\TextInput::make('teacher_id')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('subject_id')
+                    ->required()
+                    ->numeric(),
             ]);
     }
 
@@ -39,21 +42,23 @@ class CursoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->label('Nombre')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('divition.name')
-                    ->label('División')
-                    ->searchable()
+                Tables\Columns\TextColumn::make('curso_id')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('divition_id')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('teacher_id')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('subject_id')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Creado')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label('Actualizado')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -62,9 +67,7 @@ class CursoResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                ->label('Editar'),
-
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -83,9 +86,9 @@ class CursoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCursos::route('/'),
-            'create' => Pages\CreateCurso::route('/create'),
-            'edit' => Pages\EditCurso::route('/{record}/edit'),
+            'index' => Pages\ListClassrooms::route('/'),
+            'create' => Pages\CreateClassroom::route('/create'),
+            'edit' => Pages\EditClassroom::route('/{record}/edit'),
         ];
     }
 }

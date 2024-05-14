@@ -9,4 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateDivition extends CreateRecord
 {
     protected static string $resource = DivitionResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }
