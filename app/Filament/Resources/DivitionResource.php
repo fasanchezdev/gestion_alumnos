@@ -17,6 +17,8 @@ class DivitionResource extends Resource
 {
     protected static ?string $model = Divition::class;
 
+    protected static ?string $navigationLabel = 'Divisiones';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form

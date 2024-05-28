@@ -17,24 +17,26 @@ class ClassroomResource extends Resource
 {
     protected static ?string $model = Classroom::class;
 
+    protected static ?string $navigationLabel = 'Clases';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('curso_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('divition_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('teacher_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('subject_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('curso_id')
+                    ->relationship('curso','name')
+                    ->required(),
+                Forms\Components\Select::make('divition_id')
+                    ->relationship('divition','name')
+                    ->required(),
+                Forms\Components\Select::make('teacher_id')
+                    ->relationship('teacher','name')
+                    ->required(),
+                Forms\Components\Select::make('subject_id')
+                    ->relationship('subject','name')
+                    ->required(),
             ]);
     }
 
@@ -42,16 +44,20 @@ class ClassroomResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('curso_id')
+                Tables\Columns\TextColumn::make('curso.name')
+                    ->label('Curso')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('divition_id')
+                Tables\Columns\TextColumn::make('divition.name')
+                    ->label('División')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('teacher_id')
+                Tables\Columns\TextColumn::make('teacher.name')
+                    ->label('Profesor')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('subject_id')
+                Tables\Columns\TextColumn::make('subject.name')
+                    ->label('Materia')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

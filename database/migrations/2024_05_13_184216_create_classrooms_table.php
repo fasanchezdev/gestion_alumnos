@@ -29,8 +29,10 @@ return new class extends Migration
             ->constrained('subjects')
             ->cascadeOnUpdate()
             ->nulleable();
-            $table->time('start');
-            $table->time('end');
+            $table->time('start')
+            ->nulleable();
+            $table->time('end')
+            ->nulleable();
             $table->timestamps();
         });
     }

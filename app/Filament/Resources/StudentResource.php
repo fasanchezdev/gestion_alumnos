@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\TeacherResource\Pages;
-use App\Filament\Resources\TeacherResource\RelationManagers;
-use App\Models\Teacher;
+use App\Filament\Resources\StudentResource\Pages;
+use App\Filament\Resources\StudentResource\RelationManagers;
+use App\Models\Student;
 use Filament\Forms;
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -13,11 +14,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class TeacherResource extends Resource
+class StudentResource extends Resource
 {
-    protected static ?string $model = Teacher::class;
+    protected static ?string $model = Student::class;
 
-    protected static ?string $navigationLabel = 'Profesores';
+    protected static ?string $navigationLabel = 'Alumnos';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -27,20 +28,19 @@ class TeacherResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255)
-                    ->label('Nombre'),
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('last_name')
                     ->required()
-                    ->maxLength(255)
-                    ->label('Apellido'),
+                    ->maxLength(255),
+                Forms\Components\Select::make('curso_id')
+                    ->relationship('curso','name')
+                    ->required(),
                 Forms\Components\TextInput::make('dni')
                     ->required()
-                    ->maxLength(255)
-                    ->label('DNI'),
+                    ->maxLength(255),
                 Forms\Components\DatePicker::make('birthdate')
-                    ->required()
-                    ->label('Fecha de nacimiento'),
-                Forms\Components\Select::make('sex')
+                    ->required(),
+                    Forms\Components\Select::make('sex')
                     ->options([
                         'Masculino' => 'Masculino',
                         'Femenino' => 'Femenino',
@@ -51,18 +51,15 @@ class TeacherResource extends Resource
                     ->placeholder('Seleccione un sexo'),
                 Forms\Components\TextInput::make('address')
                     ->required()
-                    ->maxLength(255)
-                    ->label('Dirección'),
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('phone')
                     ->tel()
                     ->required()
-                    ->maxLength(255)
-                    ->label('Teléfono'),
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
-                    ->maxLength(255)
-                    ->label('Correo electrónico'),
+                    ->maxLength(255),
             ]);
     }
 
@@ -71,20 +68,32 @@ class TeacherResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nombre')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('last_name')
+                    ->label('Apellido')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('curso_id')
+                    ->label('Curso')
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('dni')
+                    ->label('DNI')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('birthdate')
+                    ->label('Fecha de Nacimiento')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('sex'),
+                Tables\Columns\TextColumn::make('sex')
+                    ->label('Sexo'),
                 Tables\Columns\TextColumn::make('address')
+                    ->label('Dirección')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
+                    ->label('Teléfono')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->label('Correo Electrónico')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -100,6 +109,7 @@ class TeacherResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -118,9 +128,9 @@ class TeacherResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTeachers::route('/'),
-            'create' => Pages\CreateTeacher::route('/create'),
-            'edit' => Pages\EditTeacher::route('/{record}/edit'),
+            'index' => Pages\ListStudents::route('/'),
+            'create' => Pages\CreateStudent::route('/create'),
+            'edit' => Pages\EditStudent::route('/{record}/edit'),
         ];
     }
 }

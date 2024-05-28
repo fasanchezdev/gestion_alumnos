@@ -17,6 +17,8 @@ class CursoResource extends Resource
 {
     protected static ?string $model = Curso::class;
 
+    protected static ?string $navigationLabel = 'Cursos';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
